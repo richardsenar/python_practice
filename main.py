@@ -34,6 +34,9 @@ dict[6] = "six"
 # dict.pop(1, None)
 if 1 in dict: del dict[1] 
 print(dict)
+
+input = [1,2,1,2,3,3]
+print(input[::-1])
 '''
 
 # ################################################################################
@@ -44,7 +47,7 @@ def solution_01(input):
     new = [val for idx, val in list(enumerate(input)) if idx % 2 != 0]
     return new
 
-print(solution_01(input))
+# print(solution_01(input))
 
 # ################################################################################
 # Write a function that returns the cumulative sum of elements in a list
@@ -58,7 +61,7 @@ def solution_02(input):
         new.append(accu)
     return new
 
-print(solution_02(input))
+# print(solution_02(input))
 
 # ################################################################################
 # Write a function that takes a number and returns a list of its digits
@@ -67,20 +70,20 @@ input = 123
 def solution_03(input):
     return [int(i) for i in str(input)]
 
-print(solution_03(input))
+# print(solution_03(input))
 
 
 
 # ################################################################################
 py_dict = {'e': 1, 'a': 2, 'u': 3, 'o': 4, 'i': 5}
-print(sorted(py_dict, reverse = True))
+# print(sorted(py_dict, reverse = True))
 
 x = {1: 2, 3: 4, 4: 3, 2: 1, 0: 0}
 x = {k: v for k, v in sorted(x.items(), key=lambda item: item[1])}
-print(x)
+# print(x)
 
 full_name = lambda first, last: f"Full name: {first.title()} {last.title()}"
-print(full_name("Richard", "Senar"))
+# print(full_name("Richard", "Senar"))
 
 
 
@@ -98,40 +101,85 @@ def solution_04(input):
             return i
     return -1
 
-print(solution_04(input))
+# print(solution_04(input))
 
 
 # ################################################################################
 # Write a function that returns the first non repeating charater in a string
 # ################################################################################
-# input = [7,-8,9,2,3,-4,5,6,1]
-# def solution_05(input):
-#     if len(input) <= 0:
-#         return None    
-#     new = [pow(x, 2) for x in input]
-#     new.sort()
-#     return new
-
-# print(solution_05(input))
-
-
-input = [-9,-8,-5,1,2,3,4,5,6]
+input = [-30,-20,-9,-8,-5,1,2,3,4,5,6]
 def solution_06(input):
-    idx = 0
     if len(input) == 0:
         return []
-    new = [None] * len(input)
-    input_len = len(input) -1
-    for i in range(input_len,-1,-1):
-        if i - idx == 0:
-            break
-        if pow(input[i], 2) > pow(input[idx], 2):
-            new[i] = pow(input[i], 2)
+
+    new = [None] * len(input) # new output array
+    left_idx = 0 # left index
+    right_idx = len(input) - 1 # reight index
+
+    for i in range(len(input) -1, -1, -1):
+        if abs(input[left_idx]) > abs(input[right_idx]):
+            new[i] = pow(input[left_idx], 2)
+            left_idx += 1
         else:
-            new[i] = pow(input[idx], 2)
-            idx = idx + 1
+            new[i] = pow(input[right_idx], 2)
+            right_idx -= 1
+    
     return new
 
-print(solution_06(input))
+# print(solution_06(input))
 
+
+# ################################################################################
+# return an array with values > 1 and values <= len(array)
+# ################################################################################
+
+input1 = [1,2,1,2,3,3]
+input2 = [2,1,3,5,3,2]
+input3 = [1,2,3,4,5,6]
+def solution_07(input):
+    array_len = len(input)
+    elem_count = {}
+    index = 0
+    for i in input:
+        elem_count[i] = elem_count.get(i, 0) + 1
+        if elem_count.get(i, 0) > 1:
+            return f"index: {index}, value: {i}"
+        index += 1
+    return -1
+
+# print(solution_07(input2))
+
+# ################################################################################
+# find longest sub array sum
+# arr = [1,2,3,7,5]
+# s= 12     r = [2,4]
+# ################################################################################
+
+def main(arr, num):
+    total = 0
+    left_pointer = 0
+    right_pointer = 0
+    len_result = 0
+    result = None
+    while right_pointer < len(arr):
+        total = total + arr[right_pointer]
+        if total == num:
+            if right_pointer - left_pointer >= len_result:
+                print(f'left_idx: {left_pointer}, right_idx: {right_pointer}, val: {arr[right_pointer]}, total: {total}')
+                result = [left_pointer, right_pointer]
+                len_result = right_pointer - left_pointer
+        if total > num:
+            while left_pointer < len(arr):
+                total = total - arr[left_pointer]
+                left_pointer += 1
+                if total == num:
+                    if right_pointer - left_pointer >= len_result:
+                        print(f'left_idx: {left_pointer}, right_idx: {right_pointer}, val: {arr[right_pointer]}, total: {total}')
+                        result = [left_pointer, right_pointer]
+                        len_result = right_pointer - left_pointer
+                break
+        right_pointer += 1
+    return result
+
+print(main([1,1,3,7,5,6,0,0,0,0,6], 12))
 
